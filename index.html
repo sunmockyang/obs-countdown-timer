@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <style>
+            /* @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@1,500&display=swap'); */
+            /* @import url('https://fonts.googleapis.com/css2?family=Jost:ital@1&display=swap'); */
+            @import url('https://fonts.googleapis.com/css2?family=Jost&display=swap');
+
+            body {
+                background-color: black;
+                color: white;
+            }
+
+            #countdownContainer {
+                font-family: 'Jost', sans-serif;
+                font-size: 2rem;
+                width: 100%;
+                text-align: center;
+            }
+        </style>
+        <script>
+            // Calculate target time to everday at 1:00pm
+            let targetTime = new Date();
+            targetTime.setHours(13, 0, 0);
+
+            const TARGET_TIME = targetTime;
+            const COUNTDOWN_COMPLETE_MESSAGE = "Service will begin soon";
+            let currentCountdownText = "";
+            let countdownContainer = null;
+
+            function getCountdownMessage(timeLeftMs) {
+                const timeLeftS = Math.floor(timeLeftMs / 1000);
+                const timeLeftMinutes = Math.floor(timeLeftMs / 1000 / 60);
+
+                let countdownMessage = null;
+                
+                if (timeLeftMinutes > 0) {
+                    let minuteText = (timeLeftMinutes > 1) ? "minutes" : "minute"
+                    countdownMessage = `Service will begin in ${timeLeftMinutes} ${minuteText}.`;
+                }
+
+                return countdownMessage;
+            }
+
+            function tick() {
+                const currentTime = new Date();
+                const timeLeftMs = TARGET_TIME - currentTime;
+
+                let countdownMessage = getCountdownMessage(timeLeftMs);
+                if (countdownMessage === null) {
+                    countdownMessage = COUNTDOWN_COMPLETE_MESSAGE;
+                }
+
+                // Reduce draws to the screen
+                if (currentCountdownText !== countdownMessage) {
+                    countdownContainer.innerHTML = countdownMessage;
+                    currentCountdownText = countdownMessage;
+                }
+
+                // Calls tick whenever the next frame is available
+                window.requestAnimationFrame(tick);
+            }
+
+            function main() {
+                countdownContainer = document.getElementById("countdownContainer");
+                tick();
+            }
+
+            window.onload = main;
+        </script>
+    </head>
+    <body>
+        <div id="countdownContainer"></div>
+    </body>
+</html>
